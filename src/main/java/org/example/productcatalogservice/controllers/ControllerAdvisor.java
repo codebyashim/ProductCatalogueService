@@ -14,8 +14,8 @@ public class ControllerAdvisor {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, NullPointerException.class})
-    public ResponseEntity<String> handleException(Exception e){
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler({IllegalArgumentException.class, NullPointerException.class})
+//    public ResponseEntity<String> handleException(Exception e){
+//        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//    }
 }
