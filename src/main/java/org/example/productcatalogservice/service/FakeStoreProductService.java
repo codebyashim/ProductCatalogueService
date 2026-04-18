@@ -1,6 +1,5 @@
 package org.example.productcatalogservice.service;
 
-import org.example.productcatalogservice.dtos.CategoryDto;
 import org.example.productcatalogservice.dtos.FakeStoreProductDto;
 import org.example.productcatalogservice.models.Category;
 import org.example.productcatalogservice.models.Product;
@@ -19,7 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @Service
-public class ProductService implements IProductService {
+public class FakeStoreProductService implements IProductService {
 
     @Autowired
     private RestTemplateBuilder builder;
@@ -37,7 +36,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Product> getAllProductById() {
+    public List<Product> getAllProduct() {
         return List.of();
     }
 
@@ -61,6 +60,11 @@ public class ProductService implements IProductService {
             return from(dto.getBody());
         }
         return null;
+    }
+
+    @Override
+    public void deleteProduct(Long id) {
+
     }
 
     private  <T> ResponseEntity<T> putForEntity(String url, @Nullable Object request,

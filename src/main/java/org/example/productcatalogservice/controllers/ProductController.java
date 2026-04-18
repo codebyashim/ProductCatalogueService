@@ -7,6 +7,7 @@ import org.example.productcatalogservice.models.Category;
 import org.example.productcatalogservice.models.Product;
 import org.example.productcatalogservice.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,17 +20,17 @@ import java.util.List;
 public class ProductController {
 
     @Autowired
+//    @Qualifier("storageProductService")
     private IProductService service;
     
     @GetMapping
-    public List<Product> getAllProducts(){
-        Product product = new Product();
-        product.setTitle("Oppo Reno 15 pro mini");
-        product.setId(1L);
-        product.setDescription("Compact phone");
-        List<Product> products  = new ArrayList<Product>();
-        products.add(product);
-        return products;
+    public List<ProductDto> getAllProduct() {
+        List<Product> products = service.getAllProduct();
+        List<ProductDto> dtos = new ArrayList<>();
+        for (Product p : products){
+            dtos.add(from(p));
+        }
+        return dtos;
     }
 
     @GetMapping("{id}")
@@ -49,13 +50,9 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto input) {
-        Product product = from(input);
-        product = service.createProduct(product);
-        if (product != null) {
-            ProductDto dto = from(product);
-            return new ResponseEntity<>(dto, HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        Product inputProduct = from(input);
+        Product outputProduct = service.createProduct(inputProduct);
+        return new ResponseEntity<>(from(outputProduct), HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")
@@ -67,6 +64,12 @@ public class ProductController {
             return new ResponseEntity<>(dto, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable Long id){
+        service.deleteProduct(id);
+        return new ResponseEntity<>("Product deleted", HttpStatus.OK);
     }
 
     private ProductDto from(Product product) {
