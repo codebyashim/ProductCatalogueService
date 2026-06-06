@@ -1,5 +1,6 @@
 package org.example.productcatalogservice.service;
 
+import org.example.productcatalogservice.dtos.UserDto;
 import org.example.productcatalogservice.exceptions.ProductAlreadyExistException;
 import org.example.productcatalogservice.exceptions.ProductNotFoundException;
 import org.example.productcatalogservice.models.Product;
@@ -8,6 +9,7 @@ import org.example.productcatalogservice.repos.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
 import java.util.List;
@@ -19,6 +21,9 @@ public class StorageProductService implements IProductService {
 
     @Autowired
     private ProductRepo repo;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Override
     public Product getProductById(Long id) {
@@ -68,5 +73,18 @@ public class StorageProductService implements IProductService {
             }
         }
 
+    }
+
+    @Override
+    public Product getProductDetailsBasedOnUserRoll(Long userId, Long productId) {
+        Product product = repo.findById(productId).orElse(null);
+        if (product != null) {
+            UserDto dto = restTemplate.getForEntity("http://ProjectCatelogueUserAuthService/users/{userId}", UserDto.class, userId).getBody();
+            if (dto != null){
+                System.out.println(dto.getEmail());
+                return product;
+            }
+        }
+        return null;
     }
 }

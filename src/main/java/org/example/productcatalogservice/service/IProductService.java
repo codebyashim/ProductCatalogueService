@@ -15,4 +15,6 @@ public interface IProductService {
     Product replaceProduct(Product input, Long id);
 
     void deleteProduct(Long id);
+
+    Product getProductDetailsBasedOnUserRoll(Long userId, Long productId);
 }

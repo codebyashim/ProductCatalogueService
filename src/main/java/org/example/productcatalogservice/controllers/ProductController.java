@@ -72,6 +72,12 @@ public class ProductController {
         return new ResponseEntity<>("Product deleted", HttpStatus.OK);
     }
 
+    @GetMapping("{userId}/{productId}")
+    public ProductDto getProductDetailsBasedOnUserRoll(@PathVariable Long userId, @PathVariable Long productId){
+        Product product = service.getProductDetailsBasedOnUserRoll(userId, productId);
+        return from(product);
+    }
+
     private ProductDto from(Product product) {
         ProductDto productDto = new ProductDto();
         productDto.setTitle(product.getTitle());
